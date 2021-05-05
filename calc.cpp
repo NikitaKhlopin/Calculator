@@ -112,7 +112,7 @@ int main()
 		cout << "Error\n";
 		break;
 	}
-system("cls");
+
 	return hour, minute, second;
 	
 }
