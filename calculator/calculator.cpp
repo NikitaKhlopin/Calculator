@@ -8,10 +8,10 @@
 
 #include <QMessageBox>
 
-   bool Points = false,
-    OperationV = true,
-    Otvets = false,
-    VSpacebar = false;
+   bool P = false,
+    O1 = true,
+    Ot = false,
+    VS = false;
 
 using namespace std;
 calculator::calculator(QWidget *parent)
@@ -72,37 +72,33 @@ calculator::~calculator()
 
 void calculator :: point()
 { //Для точки
-    if(Otvets == false && Points == false)
+    if(Ot == false && P == false)
     {
     QPushButton* button = (QPushButton*)sender();
 
     QString s = ui->result_show->text() + button->text();
 
-    ui->result_show->setText(s);
-
-    Points = true;
+    ui->result_show->setText(s);    P = true;
     }
 }
 
 void calculator :: spacebar()
 { //Пробел
 
-    if(Otvets == false && VSpacebar == false)
+    if(Ot == false && VS == false)
     {
     QString s = ui->result_show->text() + " ";
 
     ui->result_show->setText(s);
 
-   VSpacebar = true;
-
-    Points = false;
+   VS = true;    P = false;
     }
 }
 
 
 void calculator :: cleanAC()
 { //Отчистка
-    if(Otvets == false)
+    if(Ot == false)
 
     {
    QString s = ui->result_show->text();
@@ -113,35 +109,22 @@ void calculator :: cleanAC()
 
     ui->result_show->setText(s);
 
-    if(OperationV == true)
-    {
-        OperationV = false;
-    }
+    if(O1 == true)    {      O1 = false;   }
 
-    else if(VSpacebar == true)
-    {
-       VSpacebar = false;
-    }
+    else if(VS == true)   {       VS = false;    }
 
-    else if(Points == true)
-        Points = false;
-    }
-    }
+    else if(P == true)      P = false;   }
+   }
 }
 
 void calculator :: digit_num(){ //Ввод
 
-    if(Otvets == false)
+    if(Ot == false)
     {
     QPushButton* button = (QPushButton*)sender();
-
     QString s = ui->result_show->text() + button->text();
-
     ui->result_show->setText(s);
-
-    OperationV = false;
-
-    VSpacebar = false;
+    O1 = false;VS = false;
     }
 }
 void calculator::clicked()
@@ -150,11 +133,11 @@ void calculator::clicked()
     QString r = ui->result_show->text();
     if(!r.isEmpty())
 
-        if(Otvets == false && OperationV == true)
+        if(Ot == false && O1 == true)
         {
-    stack<QString> tmp;
+    stack<QString> qwerty;
 
-    if(VSpacebar == false){
+    if(VS == false){
     r.replace("+", " +"); r.replace("-", " -"); r.replace("*", " *"); r.replace("/", " /"); r.replace("^", " ^"); }
 
     auto sl = r.split(" ");
@@ -165,12 +148,12 @@ void calculator::clicked()
         auto t = sl.front();
         sl.pop_front();
 
-        bool is_number;
+        bool nr;
 
-        t.toDouble(&is_number);
-        if (is_number){
+        t.toDouble(&nr);
+        if (nr){
 
-            tmp.push(t);
+            qwerty.push(t);
         }
 
         else
@@ -182,37 +165,33 @@ void calculator::clicked()
             {
 
             case '/':
-                ab1 = tmp.top();
-                tmp.pop();
-                ab2 = tmp.top();
-                tmp.pop();
+                ab1 = qwerty.top();
+                qwerty.pop();
+                ab2 = qwerty.top();
+                qwerty.pop();
 
                 if(ab1.toDouble() == 0)
                 {
 
-                    QMessageBox::critical(this,"ОШИБКА!!!404!!!","На ноль делить нельзя!!!");
-                    Otvets = true;
-                    return;
+                    QMessageBox::critical(this,"ОШИБКА!!!404!!!","На ноль делить нельзя!!!"); Ot = true;return;
                 }
-                tmp.push(QString::number(ab2.toDouble()/ab1.toDouble()));
+                qwerty.push(QString::number(ab2.toDouble()/ab1.toDouble()));
                 break;
 
             case '+':
-                ab1 = tmp.top();
-
-               tmp.pop();
-                ab2 = tmp.top();
-
-                tmp.pop();
-                tmp.push(QString::number(ab2.toDouble()+ab1.toDouble()));
+                ab1 = qwerty.top();
+               qwerty.pop();
+                ab2 = qwerty.top();
+                qwerty.pop();
+               qwerty.push(QString::number(ab2.toDouble()+ab1.toDouble()));
                 break;
 
             case '-':
-                ab1 = tmp.top();
-                tmp.pop();
-                ab2 = tmp.top();
-                tmp.pop();
-                tmp.push(QString::number(ab2.toDouble()-ab1.toDouble()));
+                ab1 = qwerty.top();
+                qwerty.pop();
+                ab2 = qwerty.top();
+                qwerty.pop();
+                qwerty.push(QString::number(ab2.toDouble()-ab1.toDouble()));
                 break;
 
             case '*':
@@ -225,18 +204,17 @@ void calculator::clicked()
 
 
             case '^':
-                ab1 = tmp.top();
-                tmp.pop();
-                ab2 = tmp.top();
-                tmp.pop();
-                tmp.push(QString::number(pow(ab2.toDouble(),ab1.toDouble())));
+                ab1 = qwerty.top();
+                qwerty.pop();
+                ab2 = qwerty.top();
+                qwerty.pop();
+                qwerty.push(QString::number(pow(ab2.toDouble(),ab1.toDouble())));
                 break;
             }
         }
     }
 
-    ui->result_show->setText(tmp.top());
-    Otvets = true;
+    ui->result_show->setText(qwerty.top());Ot = true;
         }
 }
 
@@ -245,28 +223,15 @@ void calculator::clicked()
 void calculator:: cleanC()
 { //ОТчистка
     ui->result_show->setText("");
-
-    Points = false;
-
-    Otvets = false;
-
-    OperationV = true;
-
-    VSpacebar = false;
+    P = false;Ot = false;O1 = true;VS = false;
 }
 
 
 void calculator :: math()
 { //Для решения поставленной задачи
-    if(Otvets == false)
+    if(Ot == false)
     {
-    QPushButton* button = (QPushButton*)sender();
-
-    QString s = ui->result_show->text() + button->text();
-
-    ui->result_show->setText(s);
-
-    OperationV = true;
+    QPushButton* button = (QPushButton*)sender(); QString s = ui->result_show->text() + button->text(); ui->result_show->setText(s); O1 = true;
     }
 }
 
