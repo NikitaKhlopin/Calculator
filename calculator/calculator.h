@@ -28,14 +28,7 @@ private slots:
    void digit_num();//Ввод
 
 private:
-
     Ui::calculator *ui;
-    bool Points = false,
-    OperationV = true,
-    Otvets = false,
-    VSpacebar = false;
-
-
 public:
 
     calculator(QWidget *parent = nullptr);
