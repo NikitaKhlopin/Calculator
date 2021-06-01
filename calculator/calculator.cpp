@@ -8,6 +8,10 @@
 
 #include <QMessageBox>
 
+   bool Points = false,
+    OperationV = true,
+    Otvets = false,
+    VSpacebar = false;
 
 using namespace std;
 calculator::calculator(QWidget *parent)
